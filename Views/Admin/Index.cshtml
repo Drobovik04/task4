@@ -1,0 +1,133 @@
+﻿@using task4.Db
+@model IEnumerable<CustomUser>
+
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<h2>Admin Panel</h2>
+<form asp-action="BulkAction" method="post">
+<div class="d-flex justify-content-between">
+    <div class="d-flex gap-2 mb-3">
+        <button type="submit" name="action" value="block" class="btn btn-warning"><i class="fa-solid fa-lock me-1"></i>Block</button>
+        <button type="submit" name="action" value="unblock" class="btn btn-success"><i class="fa-solid fa-lock-open"></i></button>
+        <button type="submit" name="action" value="delete" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+    </div>
+    <div class="d-flex gap-2 mb-3">
+        <input id="filterInput" class="form-control" type="text" placeholder="Filter" />
+    </div>
+</div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="selectAll" />
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortColumn="Name" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        Name
+                        @if (ViewData["SortColumn"] as string == "Name")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortColumn="Email" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        Email
+                        @if (ViewData["SortColumn"] as string == "Email")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortColumn="Status" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        Status
+                        @if (ViewData["SortColumn"] as string == "Status")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortColumn="LastLoginTime" asp-route-sortOrder="@ViewData["SortOrder"]">
+                        Last Login Time
+                        @if (ViewData["SortColumn"] as string == "LastLoginTime")
+                        {
+                            <span>
+                                @(ViewData["SortOrder"] as string == "asc" ? "↑" : "↓")
+                            </span>
+                        }
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="selectedUserIds" value="@user.Id" />
+                    </td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Status</td>
+                    <td><span class="relative-time" data-datetime="@user.LastLoginTime?.ToString("o")" title="@user.LastLoginTime"></span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</form>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success mt-1">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-1">
+        @TempData["Error"]
+    </div>
+}
+
+
+
+<script>
+    document.getElementById("selectAll").addEventListener("click", function () {
+        const checkboxes = document.querySelectorAll("input[name='selectedUserIds']");
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    document.getElementById("filterInput").addEventListener("input", function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#userTableBody tr");
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const elements = document.querySelectorAll('.relative-time');
+        elements.forEach(el => {
+            const datetime = el.getAttribute('data-datetime');
+            const relativeTime = dayjs(datetime).fromNow();
+            el.textContent = relativeTime;
+        });
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        const tooltipList = tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+    });
+</script>

@@ -1,0 +1,39 @@
+﻿@using task4.ViewModels
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container-fluid vh-100 d-flex p-0">
+    <div class="col-md-4 bg-white d-flex align-items-center justify-content-start" style="margin-right: 15px;">
+        <div style="width: 100%;">
+            <h2 class="mb-4 text-center">Sign In</h2>
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input type="email" name="Email" class="form-control" id="Email" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Password</label>
+                    <input type="password" name="Password" class="form-control" id="Password" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="RememberMe" class="form-check-input" id="RememberMe">
+                    <label class="form-check-label" for="RememberMe">Remember me</label>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </div>
+                <p class="text-center mt-3">
+                    Don't have an account? <a asp-action="Register">Sign Up</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-6 bg-image" style="width: 66%; background-image: url(https://img.freepik.com/free-vector/realistic-liquid-marble-background-with-gold_52683-60060.jpg?t=st=1731858676~exp=1731862276~hmac=6d83f74d039db106925fc60f5eeff3661835cb8749930fc098e6d95fb28346b0&w=1380); background-size: cover; background-repeat: no-repeat"></div>
+</div>

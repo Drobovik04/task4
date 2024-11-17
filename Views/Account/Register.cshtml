@@ -1,0 +1,45 @@
+﻿@using task4.ViewModels
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container-fluid vh-100 d-flex p-0">
+    <div class="col-md-4 bg-white d-flex align-items-center justify-content-start" style="margin-right: 15px;">
+        <div style="width: 100%;">
+            <h2 class="mb-4 text-center">Sign Up</h2>
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                <div class="mb-3">
+                    <label for="Name">Name</label>
+                    <input type="text" class="form-control" id="Name" name="Name" required />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input type="email" name="Email" class="form-control" id="Email" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Password</label>
+                    <input type="password" name="Password" class="form-control" id="Password" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="ConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+                <p class="text-center mt-3">
+                    Do have an account? <a asp-action="Login">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-6 bg-image" style="width: 66%; background-image: url(https://img.freepik.com/free-vector/realistic-liquid-marble-background-with-gold_52683-60060.jpg?t=st=1731858676~exp=1731862276~hmac=6d83f74d039db106925fc60f5eeff3661835cb8749930fc098e6d95fb28346b0&w=1380); background-size: cover; background-repeat: no-repeat"></div>
+</div>
