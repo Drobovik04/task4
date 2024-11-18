@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using task4.Db;
+using task4.Middlewares;
 using task4.Models;
 
 namespace task4
@@ -43,6 +44,7 @@ namespace task4
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseMiddleware<BlockedUserMiddleware>();
             app.UseAuthorization();
 
             app.MapControllerRoute(

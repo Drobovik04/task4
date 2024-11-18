@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using task4.ViewModels;
 using task4.Models;
+using Microsoft.Data.SqlClient;
 
 namespace task4.Controllers
 {
@@ -40,25 +41,32 @@ namespace task4.Controllers
                     Email = model.Email,
                 };
 
-                if (await _userManager.FindByEmailAsync(model.Email) != null)
+                try
                 {
-                    ModelState.AddModelError(string.Empty, "This email is already occupied");
-                    return View(model);
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        user.LastLoginTime = DateTime.Now;
+                        await _userManager.UpdateAsync(user);
+                        return RedirectToAction("Index", "Admin");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
+                catch (DbUpdateException ex)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    user.LastLoginTime = DateTime.Now;
-                    await _userManager.UpdateAsync(user);
-                    return RedirectToAction("Index", "Admin");
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2601)
+                    {
+                        ModelState.AddModelError(string.Empty, "This email is already occupied");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "An unexpected error occurred");
+                    }
                 }
             }
 
